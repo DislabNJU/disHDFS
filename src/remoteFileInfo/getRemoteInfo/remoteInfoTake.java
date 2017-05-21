@@ -1,4 +1,4 @@
-package fileInfo.getInfo;
+package remoteFileInfo.getRemoteInfo;
 
 import java.net.URI; 
 import java.sql.Timestamp; 
@@ -16,32 +16,30 @@ import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
  *
  * 
  */ 
-public class infoTake { 
+public class remoteInfoTake { 
  
     /** 
      * @param args 
      */ 
-	public infoTake(){
+	public remoteInfoTake(){
 		
 	}
-    public static String[] getInfo(String[] files) throws Exception { 
+    public static FileStatus getInfo(String remoteHostAddress, String file) throws Exception { 
         // TODO Auto-generated method stub 
         //读取hadoop文件系统的配置 
     	 Configuration conf = new Configuration(); 
          conf.set("hadoop.job.ugi", "hadoop-user,hadoop-user"); 
-         DFSClient dfsClient = new DFSClient(new URI("hdfs://114.212.87.91:9000"),conf);
-    	int lenOfFile = files.length;
-    	String result[] = new String[lenOfFile];
-    	for (int i = 0; i< lenOfFile; i++){
     		//查看HDFS中某文件的元信息 
-            System.out.println("实验1:查看HDFS中某文件的元信息"); 
-            String fileUri = files[0]; 
+         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         //need to build file name
+            String fileUri = "hdfs://"+remoteHostAddress+"/"+file; 
             FileSystem fileFS = FileSystem.get(URI.create(fileUri) ,conf); 
             FileStatus fileStatus = fileFS.getFileStatus(new Path(fileUri)); 
             //获取这个文件的基本信息       
             if(fileStatus.isDir()==false){ 
                 System.out.println("这是个文件"); 
             } 
+            String result = "";
             System.out.println("文件路径: "+fileStatus.getPath()); 
             System.out.println("文件长度: "+fileStatus.getLen()); 
             System.out.println("文件修改日期： "+new Timestamp (fileStatus.getModificationTime()).toString()); 
@@ -52,10 +50,7 @@ public class infoTake {
             System.out.println("文件所在的分组： "+fileStatus.getGroup()); 
             System.out.println("文件的 权限： "+fileStatus.getPermission().toString()); 
             System.out.println(); 
-            LocatedBlocks locatedBlocks = dfsClient.getLocatedBlocks("/input/word.txt", 0);
-            System.out.println("blockinfo:\n" +locatedBlocks.toString());
-    	}
-        return result;
+            return fileStatus;
         
     } 
  
