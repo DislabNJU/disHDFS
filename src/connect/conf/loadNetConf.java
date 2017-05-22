@@ -20,7 +20,6 @@ public class loadNetConf {
 	}
 	private  String getInfoFromXml(String name) {
 
-		long lasting = System.currentTimeMillis();
 		try {
 			File f = new File("conf/disHDFS.xml");
 			DocumentBuilderFactory factory = DocumentBuilderFactory
